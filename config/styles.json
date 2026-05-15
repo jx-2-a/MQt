@@ -1,0 +1,263 @@
+{
+    "global": {
+        "font_family": "Microsoft YaHei",
+        "font_size": "14px",
+        "color": "#cccccc",
+        "background_color": "#1e1e1e"
+    },
+    "types": {
+        "Button": {
+            "background_color": "#0e639c",
+            "color": "#ffffff",
+            "border": "1px solid #0e639c",
+            "padding": "6px 16px",
+            "font_weight": "bold"
+        },
+        "ComboBox": {
+            "background_color": "#3c3c3c",
+            "color": "#cccccc",
+            "padding": "4px 8px",
+            "border": "1px solid #3c3c3c"
+        },
+        "LineEdit": {
+            "background_color": "#3c3c3c",
+            "color": "#cccccc",
+            "padding": "4px 8px",
+            "border": "1px solid #3c3c3c"
+        },
+        "TextEdit": {
+            "background_color": "#1e1e1e",
+            "color": "#d4d4d4",
+            "border": "none",
+            "font_family": "Consolas, Microsoft YaHei",
+            "font_size": "14px",
+            "padding": "8px"
+        },
+        "SpinBox": {
+            "background_color": "#3c3c3c",
+            "color": "#cccccc",
+            "padding": "2px 6px",
+            "border": "1px solid #3c3c3c"
+        },
+        "DoubleSpinBox": {
+            "background_color": "#3c3c3c",
+            "color": "#cccccc",
+            "padding": "2px 6px",
+            "border": "1px solid #3c3c3c"
+        },
+        "CheckBox": {
+            "color": "#cccccc"
+        },
+        "Label": {
+            "font_weight": "normal",
+            "color": "#cccccc",
+            "background_color": "transparent"
+        },
+        "Slider": {
+            "min_height": "24px"
+        },
+        "ProgressBar": {
+            "min_height": "18px",
+            "border_radius": "3px",
+            "background_color": "#3c3c3c",
+            "color": "#cccccc",
+            "border": "1px solid #3c3c3c"
+        },
+        "GroupBox": {
+            "color": "#cccccc",
+            "font_weight": "bold",
+            "border": "1px solid #3c3c3c",
+            "padding": "12px 8px 8px 8px"
+        },
+        "TabWidget": {
+            "border": "none",
+            "background_color": "#1e1e1e"
+        },
+        "TreeView": {
+            "_self": {
+                "background_color": "#252526",
+                "color": "#cccccc",
+                "border": "none",
+                "font_size": "13px"
+            },
+            "QHeaderView::section": {
+                "background_color": "#252526",
+                "color": "#cccccc",
+                "border": "none",
+                "border_bottom": "1px solid #3c3c3c",
+                "padding": "4px 8px",
+                "font_size": "12px",
+                "font_weight": "bold"
+            }
+        },
+        "ToolBar": {
+            "background_color": "#323233",
+            "border": "none",
+            "padding": "2px 4px",
+            "min_height": "36px"
+        }
+    },
+    "windows": {
+        "main": {
+            "background_color": "#1e1e1e"
+        }
+    },
+    "widgets": {
+        "ide_root": {
+            "background_color": "#1e1e1e"
+        },
+        "ide_toolbar": {
+            "_self": {
+                "background_color": "#323233",
+                "border_bottom": "1px solid #3c3c3c",
+                "min_height": "38px"
+            },
+            "QToolButton": {
+                "background_color": "transparent",
+                "color": "#cccccc",
+                "border": "none",
+                "padding": "6px 14px",
+                "font_size": "13px"
+            },
+            "QToolButton:hover": {
+                "background_color": "#3c3c3c"
+            },
+            "QToolButton:pressed": {
+                "background_color": "#505050"
+            }
+        },
+        "sidebar_panel": {
+            "background_color": "#252526",
+            "min_width": "200px"
+        },
+        "sidebar_header": {
+            "font_size": "11px",
+            "font_weight": "bold",
+            "color": "#8a8a8a",
+            "background_color": "transparent",
+            "padding": "8px 12px 4px 12px",
+            "min_height": "24px"
+        },
+        "explorer_tree": {
+            "_self": {
+                "background_color": "#252526",
+                "color": "#cccccc",
+                "border": "none",
+                "font_size": "13px"
+            },
+            "QHeaderView::section": {
+                "font_size": "12px",
+                "font_weight": "bold",
+                "color": "#cccccc",
+                "background_color": "#0d2426",
+                "border": "none",
+                "border_bottom": "1px solid #3c3c3c",
+                "padding": "4px 8px"
+            },
+            "::item:selected": {
+                "background_color": "#454eff"
+            }
+        },
+        "editor_tabs": {
+            "_self": {
+                "background_color": "#1e1e1e"
+            },
+            "::pane": {
+                "background_color": "#1e1e1e"
+            },
+            "QTabBar::tab": {
+                "background_color": "#2d2d2d",
+                "color": "#969696",
+                "padding": "6px 16px",
+                "border": "none",
+                "border_right": "1px solid #1e1e1e",
+                "font_size": "13px"
+            },
+            "QTabBar::tab:selected": {
+                "background_color": "#1e1e1e",
+                "color": "#ffffff",
+                "border_top": "2px solid #007acc"
+            },
+            "QTabBar::tab:hover": {
+                "background_color": "#3c3c3c"
+            }
+        },
+        "editor_1": {
+            "background_color": "#1e1e1e",
+            "color": "#d4d4d4",
+            "border": "none",
+            "font_family": "Consolas, Microsoft YaHei",
+            "font_size": "14px"
+        },
+        "editor_2": {
+            "background_color": "#1e1e1e",
+            "color": "#d4d4d4",
+            "border": "none",
+            "font_family": "Consolas, Microsoft YaHei",
+            "font_size": "14px"
+        },
+        "editor_3": {
+            "background_color": "#1e1e1e",
+            "color": "#d4d4d4",
+            "border": "none",
+            "font_family": "Consolas, Microsoft YaHei",
+            "font_size": "14px"
+        },
+        "bottom_panel": {
+            "background_color": "#1e1e1e"
+        },
+        "output_group": {
+            "_self": {
+                "color": "#8a8a8a",
+                "font_size": "12px",
+                "background_color": "#1e1e1e",
+                "border": "none",
+                "border_top": "1px solid #3c3c3c"
+            },
+            "::title": {
+                "background_color": "transparent",
+                "color": "#8a8a8a",
+                "font_size": "11px",
+                "font_weight": "bold",
+                "padding": "4px 12px"
+            }
+        },
+        "output_console": {
+            "background_color": "#1e1e1e",
+            "color": "#8a8a8a",
+            "border": "none",
+            "font_family": "Consolas, Microsoft YaHei",
+            "font_size": "13px",
+            "padding": "4px 12px"
+        },
+        "status_bar": {
+            "background_color": "#007acc",
+            "min_height": "24px",
+            "max_height": "24px",
+            "border": "none"
+        },
+        "status_text": {
+            "background_color": "transparent",
+            "color": "#ffffff",
+            "font_size": "12px",
+            "padding": "2px 10px"
+        },
+        "status_spacer": {
+            "background_color": "transparent"
+        },
+        "status_pos": {
+            "background_color": "transparent",
+            "color": "#ffffff",
+            "font_size": "12px",
+            "padding": "2px 10px"
+        },
+        "root": {
+            "background_color": "#1e1e1e"
+        },
+        "work_hsplit": {
+            "_self": {
+                "background_color": "#1e1e1e"
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "main": {
+        "title": "QS Controller",
+        "geometry": {
+            "x": 359,
+            "y": 255,
+            "width": 1872,
+            "height": 982
+        },
+        "opacity": 1.0,
+        "frameless": false,
+        "background_color": null,
+        "layout": "Main"
+    },
+    "widget_controller": {
+        "title": "控件控制器",
+        "geometry": {
+            "x": 700,
+            "y": 701,
+            "width": 1166,
+            "height": 665
+        },
+        "opacity": 1.0,
+        "frameless": false,
+        "background_color": "#f5f5f5",
+        "layout": "widget_controller"
+    }
+}

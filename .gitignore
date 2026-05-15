@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# IDE / Claude
+.claude/
+.vscode/
+
+# Task tracking
+follow.text
+request.txt
