@@ -109,8 +109,29 @@
 每个控件独立文件、独立继承 Qt 基类，便于后续单独设置样式或功能扩展。
 
 **容器类**: VBox/HBox(StyledBox), HSplitter/VSplitter(StyledSplitter), TabWidget(StyledTabWidget), GroupBox(StyledGroupBox), ToolBar(StyledToolBar)
-**展示类**: Label(StyledLabel), TreeView(StyledTreeWidget), ProgressBar(StyledProgressBar)
+**展示类**: Label(StyledLabel), TreeView(StyledTreeWidget), ProgressBar(StyledProgressBar), Image(StyledImage), Spacer(StyledSpacer)
 **输入类**: Button(StyledButton), ComboBox(StyledComboBox), TextEdit(StyledTextEdit), LineEdit(StyledLineEdit), CheckBox(StyledCheckBox), SpinBox(StyledSpinBox), DoubleSpinBox(StyledDoubleSpinBox), Slider(StyledSlider), Form(StyledForm)
+**复合类**: CompositeWidget(基类), TabItem(标签头)
+
+### 9a. app/ui/widgets/composite.py — 复合控件基类
+
+**设计动机**: 复杂控件（TabWidget、ToolBar 等）内部布局固定，但子区域需要独立添加内容和设置样式。CompositeWidget 提供统一的命名槽位系统，使外部代码通过 `slot(name)` 访问子区域，而非直接操作内部布局。
+
+**接口**:
+- `CompositeWidget(parent)` — 基类，构造时自动调用 `_build_layout()`
+- `_build_layout()` — 子类必须覆写，定义固定内部布局
+- `_register_slot(name, widget)` — 注册命名槽位，自动设置 `WA_StyledBackground` + `objectName=name`
+- `slot(name) -> QWidget | None` — 获取槽位 widget
+- `slot_names() -> list` — 所有槽位名称
+
+**示例 — StyledTabWidget 槽位**:
+- `tab_bar` — QTabBar，上方的 tab 存放区
+- `content` — QStackedWidget，下方的页面展示区
+
+**示例 — TabItem 槽位**:
+- `icon` — QLabel 16x16，图标区
+- `label` — QLabel，文本区
+- `actions` — QWidget(HBoxLayout)，操作按钮区
 
 ## 样式系统架构
 

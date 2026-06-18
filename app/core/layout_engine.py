@@ -4,9 +4,11 @@ from PyQt5.QtWidgets import QPushButton, QWidget, QApplication
 from app.ui.widgets import (
     StyledBox, StyledSplitter, StyledToolBar, StyledLabel, StyledTreeWidget, StyledForm,
     StyledButton, StyledComboBox, StyledTextEdit, StyledLineEdit, StyledCheckBox,
-    StyledSpinBox, StyledDoubleSpinBox, StyledTabWidget, StyledGroupBox,
-    StyledSlider, StyledProgressBar, StyledSpacer,
+    StyledSpinBox, StyledDoubleSpinBox, CachedTabWidget, StyledGroupBox,
+    StyledSlider, StyledProgressBar, StyledSpacer, StyledImage,
+    FormRow, FormContainer,
 )
+from app.ui.complex_widgets import DraggableLabel
 
 # 鼠标/事件过滤器事件
 _MOUSE_EVENTS = {"enter", "leave", "click", "double_click", "hover", "drag", "right_click"}
@@ -59,11 +61,35 @@ class _EventHandler(QObject):
         super().__init__(widget)
         self._widget = widget
         self._events = events or {}
+        self._drag_pos = None
 
     def eventFilter(self, obj, event):
         if obj is not self._widget:
             return super().eventFilter(obj, event)
         t = event.type()
+
+        # drag: 左键拖动（移动窗口）
+        if "drag" in self._events:
+            if t == QEvent.MouseButtonPress and event.button() == Qt.LeftButton:
+                self._drag_pos = event.globalPos()
+                code = self._events["drag"]
+                if code:
+                    try:
+                        exec(code, _make_exec_scope(obj))
+                    except Exception as e:
+                        print(f"[EventHandler] {code!r} -> {e}")
+                return True
+            elif t == QEvent.MouseMove and self._drag_pos is not None:
+                if not (event.buttons() & Qt.LeftButton):
+                    self._drag_pos = None  # 左键已释放但 release 被模态对话框吃掉
+                    return False
+                delta = event.globalPos() - self._drag_pos
+                self._widget.window().move(self._widget.window().pos() + delta)
+                self._drag_pos = event.globalPos()
+                return True
+            elif t == QEvent.MouseButtonRelease and event.button() == Qt.LeftButton:
+                self._drag_pos = None
+
         code = None
         if t == QEvent.Enter and "enter" in self._events:
             code = self._events["enter"]
@@ -73,13 +99,12 @@ class _EventHandler(QObject):
             if event.button() == Qt.RightButton and "right_click" in self._events:
                 code = self._events["right_click"]
             elif "click" in self._events:
+                self._drag_pos = None  # click 与 drag 互斥，避免模态对话框吃掉 release 事件
                 code = self._events["click"]
         elif t == QEvent.MouseButtonDblClick and "double_click" in self._events:
             code = self._events["double_click"]
         elif t == QEvent.HoverEnter and "hover" in self._events:
             code = self._events["hover"]
-        elif t == QEvent.DragEnter and "drag" in self._events:
-            code = self._events["drag"]
         if code:
             try:
                 exec(code, _make_exec_scope(obj))
@@ -134,7 +159,10 @@ def _bind_events(widget, node):
 
 
 def _node_id(node, path):
-    """生成稳定的控件标识符：有名用名，无名用 path hash。"""
+    """生成稳定的控件标识符：id > name > path hash。id 一旦生成永不改变。"""
+    nid = node.get("id", "")
+    if nid:
+        return nid
     name = node.get("name", "")
     if name:
         return name
@@ -145,12 +173,14 @@ def _node_id(node, path):
 # ── 控件构建器 ─────────────────────────────────────────────────────
 
 def _build_box(node, orientation, _path="0"):
-    box = StyledBox(orientation)
+    spacing = node.get("spacing", 0)
+    margins = tuple(node.get("margins", (0, 0, 0, 0)))
+    box = StyledBox(orientation, spacing=spacing, margins=margins)
     box.setObjectName(_node_id(node, _path))
     for i, child in enumerate(node.get("children", [])):
         w = build(child, f"{_path}/{i}")
         if w:
-            box.add_widget(w)
+            box.add_widget(w, int(child.get("stretch", 0)))
     return box
 
 
@@ -166,6 +196,10 @@ def _build_splitter(node, orientation, _path="0"):
     if any(s > 0 for s in stretches):
         for i, s in enumerate(stretches):
             splitter.setStretchFactor(i, s)
+        # 同步设初始比例 — setSizes 只认比例，不认绝对值
+        base = 100 * max(stretches)
+        sizes = [int(base * s / sum(stretches)) for s in stretches]
+        splitter.setSizes(sizes)
     return splitter
 
 
@@ -181,6 +215,11 @@ def _build_toolbar(node, _path="0"):
 def _build_label(node, _path="0"):
     label = StyledLabel(node.get("label", ""))
     label.setObjectName(_node_id(node, _path))
+    icon = node.get("icon", "")
+    if icon:
+        w = node.get("icon_width", 0)
+        h = node.get("icon_height", 0)
+        label.set_icon(icon, w, h)
     return label
 
 
@@ -188,6 +227,8 @@ def _build_treeview(node, _path="0"):
     tree = StyledTreeWidget()
     tree.setObjectName(_node_id(node, _path))
     tree.setHeaderLabel(node.get("label", "树"))
+    if node.get("header_hidden", False):
+        tree.setHeaderHidden(True)
     return tree
 
 
@@ -200,6 +241,14 @@ def _build_form(node, _path="0"):
 def _build_button(node, _path="0"):
     btn = StyledButton(node.get("label", ""))
     btn.setObjectName(_node_id(node, _path))
+    icon = node.get("icon", "")
+    icon_toggled = node.get("icon_toggled", "")
+    w = node.get("icon_width", 0)
+    h = node.get("icon_height", 0)
+    if icon and icon_toggled:
+        btn.set_toggle_icons(icon, icon_toggled, w, h)
+    elif icon:
+        btn.set_icon(icon, w, h)
     return btn
 
 
@@ -243,12 +292,8 @@ def _build_doublespinbox(node, _path="0"):
 
 
 def _build_tabwidget(node, _path="0"):
-    tw = StyledTabWidget()
+    tw = CachedTabWidget()
     tw.setObjectName(_node_id(node, _path))
-    for i, child in enumerate(node.get("children", [])):
-        page = build(child, f"{_path}/{i}")
-        if page:
-            tw.add_tab(page, child.get("label", "Tab"))
     return tw
 
 
@@ -280,6 +325,67 @@ def _build_spacer(node, _path="0"):
     return sp
 
 
+def _build_image(node, _path="0"):
+    img = StyledImage(
+        src=node.get("src", ""),
+        scale=node.get("scale", "contain"),
+        width=node.get("width", 0),
+        height=node.get("height", 0),
+    )
+    img.setObjectName(_node_id(node, _path))
+    return img
+
+
+def _build_draggable_label(node, _path="0"):
+    template = node.get("template", None)
+    if template is None:
+        # 从传统字段合成模板
+        template = {
+            "icon": {
+                "src": node.get("icon", ""),
+                "width": node.get("icon_width", 24),
+                "height": node.get("icon_height", 24),
+                "visible": bool(node.get("icon", "")),
+            },
+            "text": {
+                "content": node.get("label", ""),
+                "visible": True,
+            },
+            "button": {
+                "enabled": node.get("button_enabled", False),
+            },
+            "drag": {
+                "enabled": node.get("drag_enabled", True),
+            },
+        }
+    lbl = DraggableLabel(template=template)
+    lbl.setObjectName(_node_id(node, _path))
+    return lbl
+
+
+def _build_form_row(node, _path="0"):
+    row = FormRow(spacing=node.get("spacing", 40))
+    row.setObjectName(_node_id(node, _path))
+    for i, child in enumerate(node.get("children", [])):
+        w = build(child, f"{_path}/{i}")
+        if w:
+            row.add_widget(w)
+    return row
+
+
+def _build_form_container(node, _path="0"):
+    fc = FormContainer(
+        row_spacing=node.get("row_spacing", 20),
+        margin=node.get("margin", 0),
+    )
+    fc.setObjectName(_node_id(node, _path))
+    for i, child in enumerate(node.get("children", [])):
+        w = build(child, f"{_path}/{i}")
+        if w:
+            fc.add_widget(w)
+    return fc
+
+
 BUILDERS = {
     "VBox": lambda n, p="0": _build_box(n, "v", p),
     "HBox": lambda n, p="0": _build_box(n, "h", p),
@@ -301,7 +407,14 @@ BUILDERS = {
     "Slider": _build_slider,
     "ProgressBar": _build_progressbar,
     "Spacer": _build_spacer,
+    "Image": _build_image,
+    "DraggableLabel": _build_draggable_label,
+    "FormRow": _build_form_row,
+    "FormContainer": _build_form_container,
 }
+
+# 容器类型：子控件可穿透的背景，让 QLabel 背景层可见
+_CONTAINER_TYPES = {"VBox", "HBox", "HSplitter", "VSplitter", "GroupBox", "ToolBar", "Form", "FormRow", "FormContainer"}
 
 WIDGET_TYPE_OPTIONS = sorted(BUILDERS.keys())
 
@@ -314,6 +427,10 @@ def build(node, _path="0"):
     widget = builder(node, _path)
     if widget:
         widget.setProperty("layout_type", node_type)
+        # Box 类型使用 paintEvent 直绘背景（支持 rgba），不能启用 QSS 背景
+        if node_type not in ("VBox", "HBox", "Form", "Spacer"):
+            widget.setAttribute(Qt.WA_StyledBackground, True)
+        widget.setAutoFillBackground(False)
         _bind_events(widget, node)
     return widget
 
@@ -322,3 +439,33 @@ def apply_to_window(window, node):
     root = build(node, "0")
     if root:
         window.setCentralWidget(root)
+        _propagate_styled_bg(root)
+        # 递归应用样式到所有控件
+        from app.core.style_engine import cascade_apply_styles
+        cascade_apply_styles(root)
+        # 重建背景层（centralWidget 被替换后旧的 __bg_layer__ 已销毁）
+        from app.windows.base_window import BaseWindow
+        if isinstance(window, BaseWindow):
+            window.ensure_background()
+
+
+def _propagate_styled_bg(widget):
+    """确保 Qt 内部子控件使用 QSS 渲染背景。
+
+    WA_StyledBackground 让 QTabBar、QHeaderView、QScrollBar 等内部控件
+    通过 QSS 渲染背景（而非调色板），使子控件选择器（::tab、::section 等）
+    正确生效。QStackedWidget 额外禁用自动填充，否则调色板底色会遮挡
+    容器半透明背景。
+
+    注意：不对内部控件设置 WA_TranslucentBackground——它们不需要穿透到
+    窗口背景层，只需在其父容器已渲染的内容上正常绘制即可。
+    """
+    from PyQt5.QtWidgets import QStackedWidget, QHeaderView
+    for child in widget.findChildren(QWidget):
+        child.setAttribute(Qt.WA_StyledBackground, True)
+        if isinstance(child, (QStackedWidget, QHeaderView)):
+            child.setAutoFillBackground(False)
+        if isinstance(child, QHeaderView):
+            vp = child.viewport()
+            if vp:
+                vp.setAutoFillBackground(False)

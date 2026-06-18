@@ -1,0 +1,29 @@
+{
+    "main": {
+        "title": "QS Controller",
+        "geometry": {
+            "x": 299,
+            "y": 212,
+            "width": 1770,
+            "height": 1065
+        },
+        "opacity": 1.0,
+        "frameless": true,
+        "layout": "Main",
+        "background_image_scale": "crop",
+        "background_color": "#ddffffff",
+        "background_image": "D:/OneDrive/图片/好看的图片/100332485_p0_master1200.jpg"
+    },
+    "widget_controller": {
+        "title": "控件控制器",
+        "geometry": {
+            "x": 700,
+            "y": 701,
+            "width": 1166,
+            "height": 665
+        },
+        "opacity": 1.0,
+        "frameless": false,
+        "layout": "widget_controller"
+    }
+}

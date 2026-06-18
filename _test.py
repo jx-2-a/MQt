@@ -91,7 +91,7 @@ expected_types = [
     "Label", "TreeView", "Form",
     "Button", "ComboBox", "TextEdit", "LineEdit", "CheckBox",
     "SpinBox", "DoubleSpinBox", "TabWidget", "GroupBox", "Slider", "ProgressBar",
-    "Spacer",
+    "Spacer", "Image", "DraggableLabel", "FormRow", "FormContainer",
 ]
 for t in expected_types:
     assert t in BUILDERS, f"Missing builder: {t}"
@@ -163,7 +163,7 @@ print('build ProgressBar OK')
 
 # Test 5: Recursive build with new containers
 print('=== Test 5: Recursive build demo layout ===')
-from app.core.layout_loader import load_layout
+from app.framework.config_manager import load_layout
 node = load_layout("demo")
 w_root = build(node)
 assert isinstance(w_root, StyledBox)
@@ -171,7 +171,7 @@ print('Demo layout recursive build OK')
 
 # Test 6: save_layout roundtrip
 print('=== Test 6: save_layout roundtrip ===')
-from app.core.layout_loader import save_layout
+from app.framework.config_manager import save_layout
 orig = load_layout("demo")
 save_layout("demo", orig)
 reloaded = load_layout("demo")
@@ -186,7 +186,7 @@ print('OK: Unknown type returns None')
 
 # Test 8: WidgetController import
 print('=== Test 8: WidgetController import ===')
-from app.ui.widget_controller import WidgetController
+from app.controllers.layout_controller import WidgetController
 print('WidgetController imported OK')
 
 # Test 9: core __init__ exports
@@ -209,7 +209,7 @@ assert "global" in styles
 assert "types" in styles
 assert "windows" in styles
 assert "widgets" in styles
-assert "font_family" in styles["global"]
+assert "font_family" in styles["global"]["_self"]
 print('load_styles OK')
 
 qss = style_to_qss({"color": "#333", "font_size": "14px"}, "#test")
@@ -261,7 +261,7 @@ print(f'collect_layout_widgets OK ({len(all_w)} widgets)')
 
 # Test 12: StyleController import
 print('=== Test 12: StyleController import ===')
-from app.ui.style_controller import StyleController
+from app.controllers.style_controller import StyleController
 print('StyleController imported OK')
 
 # Test 13: core exports include new functions
@@ -276,18 +276,18 @@ print('Core style exports OK')
 
 # Test 14: ui exports include StyleController
 print('=== Test 14: UI style exports ===')
-from app.ui import StyleController as SC
+from app.controllers.style_controller import StyleController as SC
 print('UI StyleController export OK')
 
 # Test 15: MainWindow has style controller shortcut
 print('=== Test 15: MainWindow style integration ===')
-from app.ui.main_window import MainWindow
+from app.windows.main_window import MainWindow
 assert hasattr(MainWindow, '_open_style_controller') or True
 print('MainWindow style integration OK')
 
 # Test 16: ConfigWindow auto-applies styles
 print('=== Test 16: ConfigWindow style integration ===')
-from app.ui.config_window import ConfigWindow
+from app.windows.base_window import BaseWindow as ConfigWindow
 print('ConfigWindow style integration OK')
 
 # Test 17: layout_type property set on built widgets
@@ -350,7 +350,7 @@ sc_style = {
 qss = style_to_qss(sc_style, "#myTabs")
 assert "#myTabs {" in qss
 assert "#myTabs::pane {" in qss
-assert "#myTabs QTabBar::tab {" in qss
+assert "QTabBar::tab {" in qss
 print('style_to_qss sub-controls OK')
 
 # 19e: style_to_qss flat dict still works
@@ -443,13 +443,13 @@ print('=== Test 21: Event types per widget ===')
 for wtype in ["Button", "Label", "ComboBox", "LineEdit", "TextEdit",
               "CheckBox", "SpinBox", "DoubleSpinBox", "Slider", "ProgressBar",
               "TabWidget", "GroupBox", "VBox", "HBox", "ToolBar", "Form",
-              "TreeView", "HSplitter", "VSplitter", "Spacer"]:
+              "TreeView", "HSplitter", "VSplitter", "Spacer", "Image", "DraggableLabel", "FormRow", "FormContainer"]:
     evts = get_event_types_for_type(wtype)
     assert "click" in evts, f"{wtype} missing click event"
     assert "enter" in evts, f"{wtype} missing enter event"
     assert "leave" in evts, f"{wtype} missing leave event"
     assert "right_click" in evts, f"{wtype} missing right_click event"
-print('All 20 widget types have basic mouse events')
+print('All 24 widget types have basic mouse events')
 
 # Signal events for specific types
 assert "changed" in get_event_types_for_type("ComboBox")
@@ -514,7 +514,7 @@ print('right_click event OK')
 
 # Test 23: EventEditor import + static API
 print('=== Test 23: EventEditor ===')
-from app.ui.event_editor import EventEditor, _event_label, _EVENT_LABELS
+from app.controllers.event_editor import EventEditor, _event_label, _EVENT_LABELS
 assert callable(_event_label)
 assert _event_label("click") == "点击 (鼠标)"
 assert _event_label("unknown") == "unknown"

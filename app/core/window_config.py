@@ -1,7 +1,7 @@
 import json
 import os
 
-CONFIG_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "config")
+CONFIG_DIR = os.path.join(os.path.dirname(__file__), "..", "config")
 SETTINGS_PATH = os.path.join(CONFIG_DIR, "settings.json")
 
 
@@ -24,7 +24,7 @@ def get_window_config(key):
     return data.get(key, {})
 
 
-def update_window_config(key, geometry=None, opacity=None, frameless=None, title=None, background_color=None, layout=None):
+def update_window_config(key, geometry=None, opacity=None, frameless=None, title=None, background_color=None, background_image=None, background_image_scale=None, layout=None):
     data = load_config()
     if key not in data:
         data[key] = {}
@@ -39,6 +39,10 @@ def update_window_config(key, geometry=None, opacity=None, frameless=None, title
         section["title"] = title
     if background_color is not None:
         section["background_color"] = background_color
+    if background_image is not None:
+        section["background_image"] = background_image
+    if background_image_scale is not None:
+        section["background_image_scale"] = background_image_scale
     if layout is not None:
         section["layout"] = layout
     save_config(data)

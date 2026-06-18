@@ -1,7 +1,7 @@
 import json
 import os
 
-LAYOUT_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "config")
+LAYOUT_DIR = os.path.join(os.path.dirname(__file__), "..", "config")
 LAYOUT_PATH = os.path.join(LAYOUT_DIR, "layout.json")
 
 

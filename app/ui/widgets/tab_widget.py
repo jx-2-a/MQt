@@ -1,15 +1,7 @@
-from PyQt5.QtWidgets import QTabWidget, QWidget
+"""向后兼容代理 — 从 complex_widgets 导入。"""
+from app.ui.complex_widgets.tab_widget import CachedTabWidget as StyledTabWidget
+from app.ui.complex_widgets.tab_widget import CachedTabWidget
 
-
-class StyledTabWidget(QTabWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-    def add_tab(self, widget, title="Tab"):
-        self.addTab(widget, title)
-
-    def remove_tab(self, index):
-        self.removeTab(index)
-
-    def tab_count(self):
-        return self.count()
+# 旧名别名
+TabItem = None
+TabBar = None

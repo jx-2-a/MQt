@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QGroupBox, QVBoxLayout
+from app.core.style_engine import props_to_qss
 
 
 class StyledGroupBox(QGroupBox):
@@ -16,3 +17,6 @@ class StyledGroupBox(QGroupBox):
 
     def set_title(self, title):
         self.setTitle(title)
+
+    def apply_style(self, style_props=None):
+        self.setStyleSheet(props_to_qss(style_props) if style_props else "")

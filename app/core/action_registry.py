@@ -174,6 +174,8 @@ for aid, aname, adesc, tmpl in [
      "w = widget.window(); w.showMaximized() if not w.isMaximized() else w.showNormal()"),
     ("toggle_always_on_top", "窗口置顶", "切换窗口始终在最上层显示",
      "w = widget.window(); f = w.windowFlags(); w.setWindowFlags(f ^ Qt.WindowStaysOnTopHint); w.show()"),
+    ("drag_window", "移动窗口", "拖拽控件时移动窗口（需配合 drag 事件类型）",
+     "# drag_move_window"),
 ]:
     register_action(ActionDef(aid, aname, adesc, "窗口", [], tmpl))
 
@@ -277,4 +279,10 @@ register_widget_actions("DoubleSpinBox", [
     ActionDef("doublespinbox_set_value", "设置数值", "设置浮点数字选择框的值",
               "控件专用", [P("target", "widget_ref", "目标DoubleSpinBox"), P("value", "number", "值", "0.0")],
               "find_widget('{target}').setValue({value})"),
+])
+
+register_widget_actions("Image", [
+    ActionDef("image_set_src", "切换图片", "切换图片控件的图片源",
+              "控件专用", [P("target", "widget_ref", "目标Image"), P("src", "string", "图片路径")],
+              "find_widget('{target}').set_src('{src}')"),
 ])

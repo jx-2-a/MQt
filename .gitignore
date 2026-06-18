@@ -9,7 +9,14 @@ build/
 # IDE / Claude
 .claude/
 .vscode/
+.Ctrl/
+.gitignore
 
 # Task tracking
 follow.text
 request.txt
+
+# Assets — 加密密钥和机密文件
+app/assets/.key
+app/assets/secure/
+!app/assets/secure/.gitkeep

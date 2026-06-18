@@ -1,0 +1,326 @@
+{
+    "demo": {
+        "type": "VBox",
+        "name": "demo_root",
+        "children": [
+            {
+                "type": "ToolBar",
+                "name": "demo_toolbar",
+                "label": "演示工具栏",
+                "children": [],
+                "id": "demo_toolbar"
+            },
+            {
+                "type": "HBox",
+                "name": "input_row",
+                "children": [
+                    {
+                        "type": "Label",
+                        "name": "lbl1",
+                        "label": "输入:",
+                        "id": "lbl1"
+                    },
+                    {
+                        "type": "LineEdit",
+                        "name": "input",
+                        "label": "",
+                        "id": "input"
+                    },
+                    {
+                        "type": "Button",
+                        "name": "btn_ok",
+                        "label": "确认",
+                        "id": "btn_ok"
+                    }
+                ],
+                "id": "input_row"
+            },
+            {
+                "type": "HSplitter",
+                "name": "main_area",
+                "children": [
+                    {
+                        "type": "GroupBox",
+                        "name": "left_panel",
+                        "label": "选项面板",
+                        "children": [
+                            {
+                                "type": "ComboBox",
+                                "name": "option_combo",
+                                "label": "",
+                                "items": [
+                                    "选项A",
+                                    "选项B",
+                                    "选项C"
+                                ],
+                                "id": "option_combo"
+                            },
+                            {
+                                "type": "CheckBox",
+                                "name": "chk_enable",
+                                "label": "启用功能",
+                                "id": "chk_enable"
+                            },
+                            {
+                                "type": "SpinBox",
+                                "name": "count_spin",
+                                "label": "",
+                                "id": "count_spin"
+                            },
+                            {
+                                "type": "Slider",
+                                "name": "volume_slider",
+                                "label": "",
+                                "id": "volume_slider"
+                            }
+                        ],
+                        "id": "left_panel"
+                    },
+                    {
+                        "type": "TabWidget",
+                        "name": "right_tabs",
+                        "children": [
+                            {
+                                "type": "TextEdit",
+                                "name": "editor",
+                                "label": "编辑器",
+                                "id": "editor"
+                            },
+                            {
+                                "type": "TreeView",
+                                "name": "browser",
+                                "label": "浏览器",
+                                "id": "browser"
+                            }
+                        ],
+                        "id": "right_tabs"
+                    }
+                ],
+                "id": "main_area"
+            },
+            {
+                "type": "HBox",
+                "name": "status_row",
+                "children": [
+                    {
+                        "type": "ProgressBar",
+                        "name": "progress",
+                        "label": "",
+                        "id": "progress"
+                    },
+                    {
+                        "type": "Label",
+                        "name": "status_lbl",
+                        "label": "就绪",
+                        "id": "status_lbl"
+                    }
+                ],
+                "id": "status_row"
+            }
+        ],
+        "label": "",
+        "id": "demo_root"
+    },
+    "Main": {
+        "type": "VBox",
+        "name": "ide_root",
+        "label": "",
+        "children": [
+            {
+                "type": "HBox",
+                "name": "title bar",
+                "label": " 标题栏",
+                "children": [
+                    {
+                        "type": "Label",
+                        "name": "图标",
+                        "label": "",
+                        "id": "w1092667"
+                    },
+                    {
+                        "type": "Spacer",
+                        "name": "标题占位",
+                        "label": "新节点",
+                        "id": "w001cbf58"
+                    },
+                    {
+                        "type": "Button",
+                        "name": "关闭",
+                        "label": "",
+                        "id": "wc6b98c73",
+                        "events": {
+                            "click": "widget.window().close()"
+                        },
+                        "icon": "D:/DSSP/RPControl/app/assets/images/icons/close_cccccc.png",
+                        "icon_width": 30,
+                        "icon_height": 30
+                    }
+                ],
+                "id": "title bar",
+                "events": {
+                    "drag": "# drag_move_window"
+                }
+            },
+            {
+                "type": "ToolBar",
+                "name": "ide_toolbar",
+                "label": "工具栏",
+                "children": [
+                    {
+                        "type": "Action",
+                        "name": "act_file",
+                        "label": "文件",
+                        "id": "act_file"
+                    },
+                    {
+                        "type": "Action",
+                        "name": "act_edit",
+                        "label": "编辑",
+                        "id": "act_edit"
+                    },
+                    {
+                        "type": "Action",
+                        "name": "act_view",
+                        "label": "视图",
+                        "id": "act_view"
+                    },
+                    {
+                        "type": "Action",
+                        "name": "act_help",
+                        "label": "帮助",
+                        "id": "act_help"
+                    }
+                ],
+                "id": "ide_toolbar"
+            },
+            {
+                "type": "VSplitter",
+                "name": "main_vsplit",
+                "children": [
+                    {
+                        "type": "HSplitter",
+                        "name": "work_hsplit",
+                        "stretch": 4,
+                        "children": [
+                            {
+                                "type": "VBox",
+                                "name": "sidebar_panel",
+                                "stretch": 1,
+                                "children": [
+                                    {
+                                        "type": "Label",
+                                        "name": "sidebar_header",
+                                        "label": "资源管理器",
+                                        "id": "sidebar_header"
+                                    },
+                                    {
+                                        "type": "TreeView",
+                                        "name": "explorer_tree",
+                                        "label": "",
+                                        "id": "explorer_tree"
+                                    }
+                                ],
+                                "id": "sidebar_panel"
+                            },
+                            {
+                                "type": "TabWidget",
+                                "name": "editor_tabs",
+                                "label": "",
+                                "stretch": 8,
+                                "children": [],
+                                "id": "editor_tabs"
+                            }
+                        ],
+                        "id": "work_hsplit"
+                    },
+                    {
+                        "type": "VBox",
+                        "name": "bottom_panel",
+                        "stretch": 1,
+                        "children": [
+                            {
+                                "type": "GroupBox",
+                                "name": "output_group",
+                                "label": "输出",
+                                "children": [
+                                    {
+                                        "type": "TextEdit",
+                                        "name": "output_console",
+                                        "label": "",
+                                        "id": "output_console"
+                                    }
+                                ],
+                                "id": "output_group"
+                            }
+                        ],
+                        "id": "bottom_panel"
+                    }
+                ],
+                "id": "main_vsplit",
+                "label": "",
+                "stretch": 4
+            }
+        ],
+        "id": "ide_root"
+    },
+    "widget_controller": {
+        "type": "VBox",
+        "name": "root",
+        "children": [
+            {
+                "type": "ToolBar",
+                "name": "action_bar",
+                "label": "工具栏",
+                "children": [],
+                "id": "action_bar"
+            },
+            {
+                "type": "HSplitter",
+                "name": "main_splitter",
+                "children": [
+                    {
+                        "type": "VBox",
+                        "name": "tree_panel",
+                        "label": "控件树面板",
+                        "children": [
+                            {
+                                "type": "Label",
+                                "name": "tree_header",
+                                "label": "控件树",
+                                "id": "tree_header"
+                            },
+                            {
+                                "type": "TreeView",
+                                "name": "control_tree",
+                                "id": "control_tree"
+                            }
+                        ],
+                        "id": "tree_panel"
+                    },
+                    {
+                        "type": "VBox",
+                        "name": "property_panel",
+                        "label": "属性面板",
+                        "children": [
+                            {
+                                "type": "Label",
+                                "name": "prop_header",
+                                "label": "属性",
+                                "id": "prop_header"
+                            },
+                            {
+                                "type": "Form",
+                                "name": "property_form",
+                                "children": [],
+                                "id": "property_form"
+                            }
+                        ],
+                        "id": "property_panel"
+                    }
+                ],
+                "id": "main_splitter"
+            }
+        ],
+        "id": "root"
+    }
+}

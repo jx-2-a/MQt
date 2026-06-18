@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QSpinBox, QDoubleSpinBox
+from app.core.style_engine import props_to_qss
 
 
 class StyledSpinBox(QSpinBox):
@@ -15,6 +16,9 @@ class StyledSpinBox(QSpinBox):
     def set_range(self, min_val, max_val):
         self.setRange(min_val, max_val)
 
+    def apply_style(self, style_props=None):
+        self.setStyleSheet(props_to_qss(style_props) if style_props else "")
+
 
 class StyledDoubleSpinBox(QDoubleSpinBox):
     def __init__(self, parent=None):
@@ -30,3 +34,6 @@ class StyledDoubleSpinBox(QDoubleSpinBox):
 
     def set_range(self, min_val, max_val):
         self.setRange(min_val, max_val)
+
+    def apply_style(self, style_props=None):
+        self.setStyleSheet(props_to_qss(style_props) if style_props else "")

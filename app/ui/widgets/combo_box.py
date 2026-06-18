@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QComboBox
+from app.core.style_engine import props_to_qss
 
 
 class StyledComboBox(QComboBox):
@@ -19,3 +20,6 @@ class StyledComboBox(QComboBox):
 
     def clear_items(self):
         self.clear()
+
+    def apply_style(self, style_props=None):
+        self.setStyleSheet(props_to_qss(style_props) if style_props else "")

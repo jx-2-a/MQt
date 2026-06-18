@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QFormLayout, QLineEdit, QLabel, QComboBox
+from app.core.style_engine import props_to_qss
 
 
 class StyledForm(QWidget):
@@ -7,6 +8,9 @@ class StyledForm(QWidget):
         self._layout = QFormLayout()
         self.setLayout(self._layout)
         self._fields = {}
+
+    def apply_style(self, style_props=None):
+        self.setStyleSheet(props_to_qss(style_props) if style_props else "")
 
     def add_field(self, label, widget=None):
         if widget is None:
